@@ -80,12 +80,12 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     },
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST': '127.0.0.1',
-        'NAME': 'paligemma',
-        'PASSWORD': '',
-        'USER': 'root',
-        'PORT': '3306'
+        'ENGINE': dj_database_url.parse(os.getenv('DATABASE_URL'))
+        # 'HOST': '127.0.0.1',
+        # 'NAME': 'paligemma',
+        # 'PASSWORD': '',
+        # 'USER': 'root',
+        # 'PORT': '3306'
     }
 }
 
