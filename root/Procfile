@@ -1,1 +1,1 @@
-web: gunicorn fyp-django-deployment.wsgi:application
+web: gunicorn root.wsgi:application
