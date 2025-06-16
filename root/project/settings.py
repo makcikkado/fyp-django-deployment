@@ -81,12 +81,12 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     },
     'default': {
-        'ENGINE': dj_database_url.parse(os.getenv('DATABASE_URL'))
-        # 'HOST': '127.0.0.1',
-        # 'NAME': 'paligemma',
-        # 'PASSWORD': '',
-        # 'USER': 'root',
-        # 'PORT': '3306'
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'b2rqswusfjaiprlritup-mysql.services.clever-cloud.com',
+        'NAME': 'b2rqswusfjaiprlritup',
+        'PASSWORD': 'OQJGyQIpXxB5KwPyGbvu',
+        'USER': 'uusvia1tzpzf1nu7',
+        'PORT': '3306'
     }
 }
 
