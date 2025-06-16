@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <title>PaliGemma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #EEFCA9, #B7E576);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            /* position: absolute;
+            left: calc(50%); /* Offsets for the sidebar 
+            transform: translateX(-50%);  */
+        }
+
+        .container2 {
+            display: inline-flex;
+        }
+
+        .h1 {
+            text-align: left;
+            margin-left: 100px;
+        }
+
+        .h2 {
+            text-align: left;
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            transform: translate(-50%, -50%);
+            /* border-radius: 10px; */
+        }
+
+        #response {
+            margin-top: 20px;
+            font-weight: bold;
+            color: 373737;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 100vh;
+            background: #83CC61;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar img {
+            width: 25px;
+            margin: 10px;
+        }
+
+        /* .main-content { */
+        /* margin-left: 50px; */
+        /* width: calc(100% - 50px); */
+        /* flex-grow: 1; */
+        /* position: absolute; */
+        /* this must be here to stop dropdown icon from expanding */
+        /* display: flex; */
+        /* place-items: center; */
+        /* flex-direction: column; */
+        /* justify-content: center;  */
+        /* align-items: center; */
+        /* height: 100vh; */
+        /* padding: 20px; */
+        /* box-sizing: border-box; */
+        /* } */
+
+        .main-content {
+            /* push it over by the 50px sidebar */
+            /* position: absolute; */
+            /* top: 0; */
+            /* bottom: 0; */
+            /* left: 50px; */
+            /* right: 0; */
+
+            /* centering magic */
+            display: flex;
+            justify-content: center;
+            /* horizontal centering */
+            align-items: center;
+            /* vertical centering */
+
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+
+        .badan {
+            /* position: relative; */
+            /* top: 10%; */
+            /* right: 25%; */
+            /* display: block; */
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* justify-content: center; */
+            /* margin: auto;  */
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+            /* padding-left: 50px;  */
+            /* box-sizing: border-box; */
+            /* text-align: center; */
+            /* max-height: 100vh; */
+        }
+
+        .main-content .content-wrapper {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        ::-webkit-input-placeholder {
+            color: 373737;
+        }
+
+        ::-moz-placeholder {
+            color: 373737;
+        }
+
+        ::-ms-placeholder {
+            color: 373737;
+        }
+
+        ::placeholder {
+            color: 373737;
+        }
+
+        #display-image {
+            width: 400px;
+            height: 225px;
+            border: 1px solid black;
+            background-position: center;
+            background-size: cover;
+        }
+
+        /* .image-contain {
+            object-fit: contain;
+            object-position: center;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            display: block;
+        }*/
+
+        .image-container {
+            display: flex;
+            /* Use flexbox for easy centering */
+            justify-content: center;
+            /* Center horizontally */
+            align-items: center;
+            /* Center vertically (if the container has a defined height) */
+            width: 100%;
+            /* Take full width of its parent */
+            padding: 20px 0;
+            /* Add some vertical padding, adjust as needed */
+            /* Add any background or border styles for the container if desired */
+        }
+
+        .image-container img {
+            max-width: 100%;
+            /* Ensure the image is responsive and doesn't overflow */
+            height: auto;
+            /* Maintain aspect ratio */
+            border-radius: 10px;
+            /* If the image itself has rounded corners as in the example */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow if desired */
+        }
+
+        .image-absolute-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            /* Or a defined height*/
+        }
+
+        .image-absolute-container img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Center an absolutely positioned element*/
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .sign-up-button {
+            border: 2px solid #FFFFFF;
+            border-width: 2px;
+            /* the thickness of the outline*/
+            border-radius: 10px;
+            /* the roundness of the button */
+            background-color: #83CC61;
+            /* the color of the button */
+            color: black;
+            /* the font color*/
+            padding: 2px;
+            font-size: 15px;
+            width: 6%;
+            height: 5%;
+            cursor: pointer;
+            position: absolute;
+            right: 50px;
+            top: 18px;
+        }
+
+        .sign-up-button:hover {
+            background-color: #45a049;
+        }
+
+        .response-wrapper {
+            position: relative;
+            width: 100%;
+            margin-top: 1.5rem;
+            padding-bottom: 0.25rem;
+        }
+
+        .response-box {
+            border: 2px solid #FFFFFF;
+            border-width: 2px;
+            background-color: #83CC61;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            border-radius: 10px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .new-chat-btn {
+            background-color: white;
+            border: none;
+            margin-top: 1rem;
+            padding: 0.7rem 1.5rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .new-chat-btn:hover {
+            background-color: #83CC61;
+        }
+
+        .feedback-icons {
+            /* margin-top: 1rem; */
+            font-size: 1.2rem;
+            color: #444;
+            align-items: left;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transform: translateY(100%);
+        }
+
+        .feedback-icons i {
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .footer {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #333;
+        }
+
+        .image-container2 img {
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        .modal-overlay {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            z-index: 999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black with opacity */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-buttons button {
+            margin: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #confirmYes {
+            background-color: #83CC61;
+            color: white;
+        }
+
+        #confirmNo {
+            background-color: #ccc;
+        }
+
+        #cancelModal .modal-content {
+            background-color: #fefefe;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 100vh;
+            background-color: #83CC61;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            overflow: hidden;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.expanded {
+            width: auto;
+            align-items: flex-start;
+            padding-left: 20px;
+        }
+
+        .menu-text {
+            display: none;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .sidebar.expanded .menu-text {
+            display: inline;
+        }
+
+        .sidebar #toggleBtn {
+            background: #83CC61;
+            border: none;
+            color: black;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .sidebar .menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .sidebar .menu li {
+            /* padding: 10px 20px; */
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            transition: padding 0.3s ease;
+            margin-right: auto;
+        }
+
+        .sidebar .menu li:hover {
+            background: #EEFCA9;
+            opacity: 50%;
+            border-radius: 5px;
+        }
+
+        .sidebar .menu li a {
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar.expanded~.h1 {
+            margin-left: 200px;
+        }
+
+        .sidebar img {
+            width: 25px;
+            margin: 10px;
+        }
+
+        .model-dropdown {
+            position: absolute;
+            top: 16px;
+            left: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown-options {
+            background: #EEFCA9;
+            border: none;
+            color: black;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            margin-left: 10px;
+            padding: 10px;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/c4b02f5eae.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <!-- <div>
+        <h2 class="h1">PaliGemma</h2><br>
+        <i class="fa-solid fa-caret-down" style="display: inline-flex; margin-top: 25px; margin-left: 20px;"></i>
+        <a href="{% url 'register' %}">
+            <button type="button" class="sign-up-button">Sign Up</button>
+        </a>
+    </div> -->
+
+    <div>
+        <!-- sidebar -->
+        <div class="sidebar" id="sidebar">
+            <button id="toggleBtn">
+                <i class="fa-solid fa-bars" style="color: black; top: 5%;"></i>
+                <span class="menu-text">Menu</span>
+            </button>
+
+            <ul class="menu">
+                <li>
+                    <a href="{% url 'history' %}">
+                        <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
+                        <span class="menu-text">History</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'login' %}">
+                        <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
+                        <span class="menu-text">Help</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'login' %}">
+                        <i class="fa-solid fa-location-dot fa-lg" style="color: black;"></i>
+                        <span class="menu-text">Location</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'login' %}">
+                        <i class="fa-regular fa-globe fa-lg" style="color: black;"></i>
+                        <span class="menu-text">Language</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
+                        <span class="menu-text">Logout</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="model-dropdown">
+            <!-- make sure the icon can dropdown -->
+            <select class="dropdown-options" name="" id="">
+                <option value="paligemma">PaliGemma</option>
+                <option value="paligemma2">PaliGemma 2</option>
+            </select>
+
+        </div>
+
+        <div class="main-content">
+            <!-- <div class="content-wrapper"> -->
+            <div class="badan">
+                {% if prompt %}
+                <div class="image-container2">
+                    <img id="imagePre" src="{{ prompt.imagePrompt.url }}" alt="">
+                </div>
+                <p>{{ prompt.textPrompt }}</p>
+                {% endif %}
+
+                <!-- make a box for the response and contain it in -->
+                <div class="response-wrapper">
+                    <div class="response-box">
+                        {% if ai_response %}
+                        <p>{{ ai_response }}</p>
+                        {% else %}
+                        <p id="loading">Processing... Please wait.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="feedback-icons">
+                        <i class="fas fa-copy"></i>
+                        <i class="fas fa-rotate-left"></i>
+                        <i class="fas fa-thumbs-up"></i>
+                        <i class="fas fa-thumbs-down"></i>
+                    </div>
+                </div>
+
+                <button id="newChatBtn" class="new-chat-btn">NEW CHAT</button>
+
+                <footer class="footer">
+                    This chatbot handles only one prompt at a time. Submit a new prompt to restart.
+                </footer>
+
+                <!-- prompt shown (fetch or use the same session) -->
+                <!-- response processing + response shown (AI model inference fetched from API)-->
+
+                <!-- <h2 class="h2">Response:</h2> -->
+                <!-- <p id="loading">Processing... Please wait.</p>
+                            <p class="response" id="response"></p> -->
+            </div>
+            <!-- </div> -->
+        </div>
+    </div>
+
+    <!-- First Modal Overlay -->
+    <div id="confirmationModal" class="modal-overlay">
+        <div class="modal-content">
+            <p>Do you want to save your current prompt?</p>
+            <div class="modal-buttons">
+                <button id="confirmYes">Yes</button>
+                <button id="confirmNo">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Second Modal Overlay (No option) -->
+    <div id="cancelModal" class="modal-overlay">
+        <div class="modal-content">
+            <p>Are you sure? Your prompt will be lost.</p>
+            <div class="modal-buttons">
+                <button id="cancelConfirm">I'm sure</button>
+                <button id="cancelBack">Go Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Third modal overlay (Yes option) -->
+    <div id="yesModal" class="modal-overlay">
+        <div class="modal-content">
+            <p>Login to save your chat history or Signup if you're not registered</p>
+            <div class="modal-buttons">
+                <button id="logIn">Login</button>
+                <button id="signUp">Sign Up</button>
+                <button id="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const newChatBtn = document.querySelector('.new-chat-btn');
+
+        const confirmationModal = document.getElementById('confirmationModal');
+        const cancelModal = document.getElementById('cancelModal');
+        const yesModal = document.getElementById('yesModal')
+
+        // first modal (do u want to save prompt)
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+
+        // second modal (are u sure? prompt will be lost if choose no)
+        const cancelConfirm = document.getElementById('cancelConfirm');
+        const cancelBack = document.getElementById('cancelBack');
+
+        // thrid modal (login or signup or cancel)
+        const logIn = document.getElementById('logIn');
+        const signUp = document.getElementById('signUp');
+        const cancel = document.getElementById('cancel')
+
+        // Show first modal
+        newChatBtn.addEventListener('click', () => {
+            confirmationModal.style.display = 'flex'; //show modal
+        });
+
+        // Handle "No" from first modal (should open another modal)
+        confirmNo.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+            cancelModal.style.display = 'flex'; // opens are u sure modal
+        });
+
+        // Handle "Yes" from first modal
+        confirmYes.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+            yesModal.style.display = 'flex';
+        });
+
+        // Confirm cancel new chat (shud open another modal)
+        // second modal options (im'sure)
+        cancelConfirm.addEventListener('click', () => {
+            cancelModal.style.display = 'none';
+            window.location.href = "{% url 'main' %}"
+        });
+
+        // Go back to first modal
+        cancelBack.addEventListener('click', () => {
+            cancelModal.style.display = 'none';
+            confirmationModal.style.display = 'flex';
+        });
+
+        logIn.addEventListener('click', () => {
+            yesModal.style.display = 'none';
+            window.location.href = "{% url 'login' %}"; //redirect to login page
+        });
+
+        signUp.addEventListener('click', () => {
+            yesModal.style.display = 'none';
+            window.location.href = "{% url 'register' %}";
+        });
+
+        cancel.addEventListener('click', () => {
+            yesModal.style.display = 'none';
+        });
+    </script>
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+        });
+    </script>
+</body>
+
+</html>
