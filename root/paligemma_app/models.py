@@ -41,8 +41,8 @@ class Response(models.Model):
         return f'Response {self.responseID}'
 
 class Profile(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # id = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     prompt = models.ManyToManyField(Prompt, blank=True)
     response = models.ManyToManyField(Response, blank=True)
 
