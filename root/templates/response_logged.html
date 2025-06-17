@@ -4,6 +4,7 @@
 <head>
     {% load static %}
     <title>PaliGemma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +12,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100%;
             display: flex;
             justify-content: center;
         }
@@ -530,7 +531,11 @@
                     </div>
                 </div>
 
-                <button id="newChatBtn" class="new-chat-btn">NEW CHAT</button>
+                <!-- <button id="newChatBtn" class="new-chat-btn">NEW CHAT</button> -->
+
+                <a href="{% url 'main' %}">
+                    <button type="button" class="new-chat-btn">NEW CHAT</button>
+                </a>
 
                 <footer class="footer">
                     This chatbot handles only one prompt at a time. Submit a new prompt to restart.
@@ -547,104 +552,6 @@
         </div>
     </div>
 
-    <!-- First Modal Overlay -->
-    <div id="confirmationModal" class="modal-overlay">
-        <div class="modal-content">
-            <p>Do you want to save your current prompt?</p>
-            <div class="modal-buttons">
-                <button id="confirmYes">Yes</button>
-                <button id="confirmNo">No</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Second Modal Overlay (No option) -->
-    <div id="cancelModal" class="modal-overlay">
-        <div class="modal-content">
-            <p>Are you sure? Your prompt will be lost.</p>
-            <div class="modal-buttons">
-                <button id="cancelConfirm">I'm sure</button>
-                <button id="cancelBack">Go Back</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Third modal overlay (Yes option) -->
-    <div id="yesModal" class="modal-overlay">
-        <div class="modal-content">
-            <p>Login to save your chat history or Signup if you're not registered</p>
-            <div class="modal-buttons">
-                <button id="logIn">Login</button>
-                <button id="signUp">Sign Up</button>
-                <button id="cancel">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        const newChatBtn = document.querySelector('.new-chat-btn');
-
-        const confirmationModal = document.getElementById('confirmationModal');
-        const cancelModal = document.getElementById('cancelModal');
-        const yesModal = document.getElementById('yesModal')
-
-        // first modal (do u want to save prompt)
-        const confirmYes = document.getElementById('confirmYes');
-        const confirmNo = document.getElementById('confirmNo');
-
-        // second modal (are u sure? prompt will be lost if choose no)
-        const cancelConfirm = document.getElementById('cancelConfirm');
-        const cancelBack = document.getElementById('cancelBack');
-
-        // thrid modal (login or signup or cancel)
-        const logIn = document.getElementById('logIn');
-        const signUp = document.getElementById('signUp');
-        const cancel = document.getElementById('cancel')
-
-        // Show first modal
-        newChatBtn.addEventListener('click', () => {
-            confirmationModal.style.display = 'flex'; //show modal
-        });
-
-        // Handle "No" from first modal (should open another modal)
-        confirmNo.addEventListener('click', () => {
-            confirmationModal.style.display = 'none';
-            cancelModal.style.display = 'flex'; // opens are u sure modal
-        });
-
-        // Handle "Yes" from first modal
-        confirmYes.addEventListener('click', () => {
-            confirmationModal.style.display = 'none';
-            yesModal.style.display = 'flex';
-        });
-
-        // Confirm cancel new chat (shud open another modal)
-        // second modal options (im'sure)
-        cancelConfirm.addEventListener('click', () => {
-            cancelModal.style.display = 'none';
-            window.location.href = "{% url 'main' %}"
-        });
-
-        // Go back to first modal
-        cancelBack.addEventListener('click', () => {
-            cancelModal.style.display = 'none';
-            confirmationModal.style.display = 'flex';
-        });
-
-        logIn.addEventListener('click', () => {
-            yesModal.style.display = 'none';
-            window.location.href = "{% url 'login' %}"; //redirect to login page
-        });
-
-        signUp.addEventListener('click', () => {
-            yesModal.style.display = 'none';
-            window.location.href = "{% url 'register' %}";
-        });
-
-        cancel.addEventListener('click', () => {
-            yesModal.style.display = 'none';
-        });
-    </script>
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleBtn');
