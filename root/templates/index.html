@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <title>PaliGemma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -10,7 +11,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100%;
             display: flex;
         }
         .container {
@@ -27,18 +28,32 @@
 
         .model-dropdown {
             padding-left: 75px;
+            display: flex;
+            justify-content: space-between; /* Puts dropdown on the left, button on the right */
+            align-items: center;
+            padding: 8px 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+            box-sizing: border-box;
+            margin-left: 30px;
+            margin-right: 30px;
         }
 
         .dropdown-options {
             background: #EEFCA9;
             border: none;
             color: black;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
-            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            /* width: 100%;
             text-align: left;
             margin-left: 10px;
-            padding: 10px;
+            padding: 10px; */
         }
 
         .h2 {
@@ -148,7 +163,7 @@
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
-            overflow: hidden;
+            overflow: visible;
             transition: width 0.3s ease;
         }
 
@@ -156,6 +171,7 @@
             width: auto;
             align-items: flex-start;
             padding-left: 20px;
+            z-index: 10;
         }
 
         .menu-text {
@@ -189,11 +205,36 @@
             padding: 10px;
             transition: padding 0.3s ease;
             margin-right: auto;
+            position: relative;
+        }
+
+        .sidebar .menu li::after {
+            content: attr(data-tooltip); /* The text will come from the data-tooltip attribute */
+            position: absolute;
+            /* left: 50px; Position the tooltip to the right of the icon */
+            left: calc(100% + 10px); /* dynamically position right of sidebar */
+            top: 50%;
+            transform: translateY(-50%);
+            background: #EEFCA9;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+            z-index: 20;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* This adds the shadow */
+        }
+
+        .sidebar:not(.expanded) .menu li:hover::after {
+            opacity: 1;
         }
 
         .sidebar .menu li:hover{
             background: #EEFCA9;
-            opacity: 50%;
+            opacity: 75%;
             border-radius: 5px;
         }
 
@@ -258,6 +299,11 @@
             font-size: 0.85rem;
             color: #333;
         }
+
+        .upload-box.dragover {
+            background-color: #94d35e;
+            border: 2px dashed #FFFFFF;
+        }
     </style>
     <script src="https://kit.fontawesome.com/c4b02f5eae.js" crossorigin="anonymous"></script>
     <script>
@@ -311,35 +357,35 @@
         </button>
 
         <ul class="menu">
-            <li>
+            <li data-tooltip="Home">
+                <a href="{% url 'home' %}">
+                    <i class="fa-solid fa-house" style="color: black;"></i>
+                    <span class="menu-text">Home</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Chat History">
                 <a href="{% url 'history' %}">
                     <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
                     <span class="menu-text">History</span>
                 </a>
             </li>
 
-            <li>
+            <li data-tooltip="Help">
                 <a href="{% url 'login' %}">
                     <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
                     <span class="menu-text">Help</span>
                 </a>
             </li>
 
-            <li>
+            <li data-tooltip="Language">
                 <a href="{% url 'login' %}">
-                    <i class="fa-solid fa-location-dot fa-lg" style="color: black;"></i>
-                    <span class="menu-text">Location</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="{% url 'login' %}">
-                    <i class="fa-regular fa-globe fa-lg" style="color: black;"></i>
+                    <i class="fa-solid fa-language" style="color: black;"></i>                    
                     <span class="menu-text">Language</span>
                 </a>
             </li>
 
-            <li>
+            <li data-tooltip="Logout">
                 <a href="{% url 'logout' %}">
                     <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
                     <span class="menu-text">Logout</span>
@@ -354,11 +400,9 @@
             <option value="paligemma">PaliGemma</option>
             <option value="paligemma2">PaliGemma 2</option>
          </select>
-
-        <!-- <i class="fa-solid fa-caret-down" style="display: inline-flex; margin-top: 25px; margin-left: 20px;"></i> -->
     </div>
 
-    {% if messages %}
+    <!-- {% if messages %}
         {% for message in messages %}
             {% if messages.tags == 'error' %}
                 <center><h4 style="color: firebrick;">{{message}}</h4></center>
@@ -366,7 +410,7 @@
                 <center><h4 style="color: dodgerblue;">{{message}}</h4></center>
             {% endif %}
         {% endfor %}
-    {% endif %}
+    {% endif %} -->
 
     <form method="POST" enctype="multipart/form-data">
 
@@ -379,11 +423,13 @@
             <input type="file" id="image" accept="image/*" onchange="document.getElementById('imagePre').src = window.URL.createObjectURL(this.files[0])" name="imagePrompt"><br>
             <!-- <div id="display-image"></div> -->
             <label class="upload-box" for="image" id="uploadBox">
+                <span id="iconElement">
+                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                </span>
+                <span id="uploadText">Upload an image</span>
                 <img class="image-contain" id="imagePre" src="{{ Prompt.imagePrompt.url }}" alt="">
                 
                 <!-- <img id="imagePreview" src="{{ Prompt.imagePrompt.url }}" alt="uploads/uploaded_image.jpg" style="max-width: 100%; max-height: 100%; display: none;"> -->
-                <!-- add the upload icon in this line -->
-                <!-- <span id="uploadText">Upload an image</span> -->
             </label>
 
             {% if prompt %}
@@ -409,6 +455,42 @@
 
         toggleBtn.addEventListener('click', () => {
             sidebar.classList.toggle('expanded');
+        });
+
+        const uploadBox = document.getElementById('uploadBox');
+        const fileInput = document.getElementById('image');
+        const imgPreview = document.getElementById('imagePre');
+
+        uploadBox.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadBox.classList.add('dragover');
+        });
+
+        uploadBox.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadBox.classList.remove('dragover');
+        });
+
+        uploadBox.addEventListener('drop', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            uploadBox.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+
+                // Show preview
+                const file = files[0];
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    imgPreview.src = event.target.result;
+                    imgPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
         });
     </script>
 
