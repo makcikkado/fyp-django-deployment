@@ -51,9 +51,13 @@
         }
 
         .footer {
-            margin-top: 1rem;
+/*             margin-top: 1rem;
             font-size: 0.85rem;
-            color: #333;
+            color: #333; */
+            position: absolute;
+            bottom: 10px; /* or 0 if you want it flush with bottom */
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .sidebar {
@@ -515,9 +519,11 @@
 
                 <button id="newChatBtn" class="new-chat-btn">NEW CHAT</button>
 
-                <footer class="footer">
-                    This chatbot handles only one prompt at a time. Submit a new prompt to restart.
-                </footer>
+                <div class="footer">
+                    <p>
+                        This chatbot handles only one prompt at a time. Submit a new prompt to restart.
+                    </p>
+                </div>
 
                 <!-- prompt shown (fetch or use the same session) -->
                 <!-- response processing + response shown (AI model inference fetched from API)-->
