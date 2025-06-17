@@ -405,11 +405,41 @@
             margin-right: auto;
         }
 
-        .sidebar .menu li:hover {
+        .sidebar .menu li::after {
+            content: attr(data-tooltip); /* The text will come from the data-tooltip attribute */
+            position: absolute;
+            /* left: 50px; Position the tooltip to the right of the icon */
+            left: calc(100% + 10px); /* dynamically position right of sidebar */
+            top: 50%;
+            transform: translateY(-50%);
+            background: #EEFCA9;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+            z-index: 20;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* This adds the shadow */
+        }
+
+        .sidebar:not(.expanded) .menu li:hover::after {
+            opacity: 1;
+        }
+
+        .sidebar .menu li:hover{
+            background: #EEFCA9;
+            opacity: 75%;
+            border-radius: 5px;
+        }
+        
+/*         .sidebar .menu li:hover {
             background: #EEFCA9;
             opacity: 50%;
             border-radius: 5px;
-        }
+        } */
 
         .sidebar .menu li a {
             color: black;
@@ -465,13 +495,13 @@
                         <span class="menu-text">Home</span>
                     </a>
                 </li>
-                <li>
+                <li data-tooltip="Help">
                     <a href="{% url 'login' %}">
                         <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
                         <span class="menu-text">Help</span>
                     </a>
                 </li>
-                <li>
+                <li data-tooltip="Language">
                     <a href="{% url 'login' %}">
                         <i class="fa-solid fa-language" style="color: black;"></i>
                         <span class="menu-text">Language</span>
