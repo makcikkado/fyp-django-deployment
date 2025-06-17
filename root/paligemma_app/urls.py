@@ -35,7 +35,8 @@ urlpatterns = [
     path('reset-password/<str:reset_id>/', views.ResetPassword, name='reset-password'),
     path('response/<int:pk>/', views.ResponseView, name='response'),
     path('response_logged/<int:pk>/', views.ResponseLoggedView, name='response-logged'),
-    path('history/', views.HistoryView, name='history')
-    # path('upload/', views.ImageUploadView, name='image_upload'),
+    path('history/', views.HistoryView, name='history'),
+    path('language/', views.LanguageView, name='languages'),
+    path('help/', views.HelpView, name='help-menu')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
