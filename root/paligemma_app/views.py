@@ -348,7 +348,7 @@ def ResponseLoggedView(request, pk=None):
 
 def HistoryView(request):
     # user_prompts = Prompt.objects.filter(userID=request.user).order_by('-promptID')
-    responses = Profile.objects.filter(user=request.user).order_by('-responseID')
+    responses = Profile.objects.filter(user=request.user).order_by('-response')
     context = {
         'response': responses
     }
