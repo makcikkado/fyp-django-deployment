@@ -446,14 +446,6 @@
 </head>
 
 <body>
-    <!-- <div>
-        <h2 class="h1">PaliGemma</h2><br>
-        <i class="fa-solid fa-caret-down" style="display: inline-flex; margin-top: 25px; margin-left: 20px;"></i>
-        <a href="{% url 'register' %}">
-            <button type="button" class="sign-up-button">Sign Up</button>
-        </a>
-    </div> -->
-
     <div>
         <!-- sidebar -->
         <div class="sidebar" id="sidebar">
@@ -469,13 +461,12 @@
                         <span class="menu-text">Home</span>
                     </a>
                 </li>
-                <li>
+                <li data-tooltip="Chat History">
                     <a href="{% url 'history' %}">
                         <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
                         <span class="menu-text">History</span>
                     </a>
                 </li>
-
                 <li>
                     <a href="{% url 'login' %}">
                         <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
@@ -489,7 +480,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li data-tooltip="Logout">
                     <a href="{% url 'logout' %}">
                         <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
                         <span class="menu-text">Logout</span>
