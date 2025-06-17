@@ -348,8 +348,16 @@ def ResponseLoggedView(request, pk=None):
 
 def HistoryView(request):
     # user_prompts = Prompt.objects.filter(userID=request.user).order_by('-promptID')
-    responses = Profile.objects.filter(user=request.user).order_by('-response')
+    # responses = Profile.objects.filter(user=request.user).order_by('-response')
+    # context = {
+    #     'response': responses
+    # }
+
+    profile = Profile.objects.get(user=request.user)
+    responses = profile.response.all().select_related('prompt')  # Efficiently fetch linked prompt
+
     context = {
-        'response': responses
+        'profile': profile,
+        'responses': responses
     }
     return render(request, 'history.html', context)
