@@ -357,10 +357,10 @@
          <img src="" alt="">
          {% if responses %}
             <div class="history-grid">
-                {% for profile in responses %}
+                {% for response in responses %}
                         <div class="history-item">
-                            <img src="{{ prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
-                            <div class="prompt-text">{{ profile.responseID }}</div>
+                            <img src="{{ response.prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
+                            <div class="prompt-text">{{ response.response }}</div>
                         </div>                     
                 {% endfor %}
             </div>
