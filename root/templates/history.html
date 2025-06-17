@@ -355,12 +355,12 @@
 
         <!-- fetch all image from db -->
          <img src="" alt="">
-         {% if prompts %}
+         {% if responses %}
             <div class="history-grid">
-                {% for prompt in prompts %}
+                {% for profile in responses %}
                         <div class="history-item">
                             <img src="{{ prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
-                            <div class="prompt-text">{{ response.responseID }}</div>
+                            <div class="prompt-text">{{ profile.responseID }}</div>
                         </div>                     
                 {% endfor %}
             </div>
