@@ -361,3 +361,9 @@ def HistoryView(request):
         'responses': responses
     }
     return render(request, 'history.html', context)
+
+def LanguageView(request):
+    return render(request, 'language.html')
+
+def HelpView(request):
+    return render(request, 'help-menu.html')
