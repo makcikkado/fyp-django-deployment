@@ -3,6 +3,7 @@
 <head>
     {% load static %}
     <title>PaliGemma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -10,7 +11,7 @@
             text-align: center;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: 100%;
             display: flex;
         }
         .container {
@@ -26,7 +27,7 @@
         }
         .h1 {
             text-align: left;
-            margin-left: 100px;
+            /* margin-left: 100px; */
         }
         .h2 {
             text-align: left;
@@ -296,87 +297,117 @@
             margin-left: 10px;
             padding: 10px;
         }
+
+        
+        .history-grid {
+            display: flex;
+            flex-wrap: wrap; /* Allows wrapping to next line if too many images */
+            justify-content: center; /* Center the row */
+            gap: 20px; /* Space between images */
+            padding: 20px;
+        }
+
+        .history-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .history-item img {
+            width: 200px;
+            height: 200px;
+            object-fit: cover; /* Crop to fit nicely */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .prompt-text {
+            margin-top: 8px;
+            font-weight: bold;
+            color: #373737;
+            text-align: center;
+        }
+
+        .main-wrapper {
+            margin-left: 50px; /* Match the sidebar collapsed width */
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+
+        /* When sidebar expands, push main content further */
+        .sidebar.expanded ~ .main-wrapper {
+            margin-left: 200px; /* Adjust based on your expanded sidebar width */
+        }
+
     </style>
     <script src="https://kit.fontawesome.com/c4b02f5eae.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div>
-        <!-- <h2 class="h1">PaliGemma</h2><br>
-        <i class="fa-solid fa-caret-down" style="display: inline-flex; margin-top: 25px; margin-left: 20px;"></i> -->
-
-       <!-- sidebar -->
-        <div class="sidebar" id="sidebar">
-            <button id="toggleBtn">
-                <i class="fa-solid fa-bars" style="color: black; top: 5%;"></i>
-                <span class="menu-text">Menu</span>
-            </button>
-
-            <ul class="menu">
-                <li>
-                    <a href="{% url 'history' %}">
-                        <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
-                        <span class="menu-text">History</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'login' %}">
-                        <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
-                        <span class="menu-text">Help</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'login' %}">
-                        <i class="fa-solid fa-location-dot fa-lg" style="color: black;"></i>
-                        <span class="menu-text">Location</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'login' %}">
-                        <i class="fa-regular fa-globe fa-lg" style="color: black;"></i>
-                        <span class="menu-text">Language</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'logout' %}">
-                        <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
-                        <span class="menu-text">Logout</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- model dropdown for both paligemma model -->
-        <div class="model-dropdown">
-        <!-- make sure the icon can dropdown -->
-            <select class="dropdown-options" name="" id=""> <!--name is for use in views.py, id is for use in js-->
-            <option value="paligemma">PaliGemma</option>
-            <option value="paligemma2">PaliGemma 2</option>
-            </select>
-
-        <!-- <i class="fa-solid fa-caret-down" style="display: inline-flex; margin-top: 25px; margin-left: 20px;"></i> -->
-        </div>
-
+    <div class="main-wrapper">
+        <h2 class="h1">Chat History</h2><br>
 
         <!-- fetch all image from db -->
          <img src="" alt="">
          {% if prompts %}
-            <ul>
+            <div class="history-grid">
                 {% for prompt in prompts %}
-                    <li>
-                        <img src="{{ prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
-                        <strong>Prompt:</strong> {{ prompt.textPrompt }}<br> <!--maybe we change this to response-->
-                    </li>
+                        <div class="history-item">
+                            <img src="{{ prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
+                            <div class="prompt-text">{{ prompt.textPrompt }}</div>
+                        </div>                     
                 {% endfor %}
-            </ul>
+            </div>
         {% else %}
             <p>No uploads yet.</p>
         {% endif %}
-
     </div>
+
+
+    <!-- sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button id="toggleBtn">
+            <i class="fa-solid fa-bars" style="color: black; top: 5%;"></i>
+            <span class="menu-text">Menu</span>
+        </button>
+
+        <ul class="menu">
+            <li>
+                <a href="{% url 'history' %}">
+                    <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
+                    <span class="menu-text">History</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'login' %}">
+                    <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
+                    <span class="menu-text">Help</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'login' %}">
+                    <i class="fa-solid fa-location-dot fa-lg" style="color: black;"></i>
+                    <span class="menu-text">Location</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'login' %}">
+                    <i class="fa-regular fa-globe fa-lg" style="color: black;"></i>
+                    <span class="menu-text">Language</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{% url 'logout' %}">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
+                    <span class="menu-text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
     <script>
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleBtn');
