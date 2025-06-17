@@ -360,7 +360,7 @@
                 {% for prompt in prompts %}
                         <div class="history-item">
                             <img src="{{ prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
-                            <div class="prompt-text">{{ prompt.textPrompt }}</div>
+                            <div class="prompt-text">{{ response.response }}</div>
                         </div>                     
                 {% endfor %}
             </div>
