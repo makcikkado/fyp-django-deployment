@@ -323,7 +323,7 @@ def ResponseLoggedView(request, pk=None):
             'ai_response': ai_response,
             'response_obj': saved_response
         }
-        return render(request, 'response.html', context)
+        return render(request, 'response_logged.html', context)
 
     return render(request, 'home.html')
 
