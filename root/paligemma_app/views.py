@@ -314,7 +314,7 @@ def ResponseLoggedView(request, pk=None):
         )
 
         # Update profile table
-        profile = Profile.objects.get(userID=request.userID)
+        profile = Profile.objects.get(user=request.user)
         profile.prompts.add(prompt_obj)
         profile.responses.add(saved_response)
 
