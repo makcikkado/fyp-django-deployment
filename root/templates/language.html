@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>PaliGemma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #EEFCA9, #B7E576);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            position: absolute;
+            left: calc(50%); /* Offsets for the sidebar */
+            transform: translateX(-50%); 
+        }
+        .container2 {
+            display: inline-flex;
+        }
+
+        .h2 {
+            text-align: left;
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            transform: translate(-50%, -50%);
+            /* border-radius: 10px; */
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 100vh;
+            background-color: #83CC61;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            overflow: visible;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.expanded {
+            width: auto;
+            align-items: flex-start;
+            padding-left: 20px;
+            z-index: 10;
+        }
+
+        .menu-text {
+            display: none;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .sidebar.expanded .menu-text {
+            display: inline;
+        }
+
+        .sidebar #toggleBtn {
+            background: #83CC61;
+            border: none;
+            color: black;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .sidebar .menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .sidebar .menu li{
+            /* padding: 10px 20px; */
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            transition: padding 0.3s ease;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .sidebar .menu li::after {
+            content: attr(data-tooltip); /* The text will come from the data-tooltip attribute */
+            position: absolute;
+            /* left: 50px; Position the tooltip to the right of the icon */
+            left: calc(100% + 10px); /* dynamically position right of sidebar */
+            top: 50%;
+            transform: translateY(-50%);
+            background: #EEFCA9;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+            z-index: 20;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* This adds the shadow */
+        }
+
+        .sidebar:not(.expanded) .menu li:hover::after {
+            opacity: 1;
+        }
+
+        .sidebar .menu li:hover{
+            background: #EEFCA9;
+            opacity: 75%;
+            border-radius: 5px;
+        }
+
+        .sidebar .menu li a {
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar.expanded ~ .h1 {
+            margin-left: 200px;
+        }
+
+        .sidebar img {
+            width: 25px;
+            margin: 10px;
+        }
+
+        ::-webkit-input-placeholder {
+            color:373737;
+        }
+
+        ::-moz-placeholder {
+            color:373737;
+        }
+
+        ::-ms-placeholder {
+            color:373737;
+        }
+
+        ::placeholder {
+            color:373737;
+        }
+
+        .language-page {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Align content to the left */
+        padding: 20px;
+    }
+
+    .language-page h2 {
+        text-align: left;
+        margin-bottom: 20px;
+        margin-left: 30px;
+    }
+
+    .language-list {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start; /* Align columns to the left */
+        width: 100%;
+        padding-left: 30px;
+        box-sizing: border-box;
+    }
+
+    .language-column {
+        flex: 1;
+        list-style: none;
+        padding: 0;
+        margin-right: 20px; /* Space between columns */
+        text-align: left;
+    }
+
+    .language-column li {
+        margin-bottom: 8px;
+    }
+
+    .language-column li a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .language-note {
+        /* position: absolute;
+        bottom: 20px;
+        left: 80px; /* Adjust based on sidebar width 
+        font-size: 0.9em;
+        color: #333;
+        /* text-align: left; 
+        text-align: center;
+        display: flex;
+        justify-items: center;
+        align-items: center; */
+
+        position: absolute;
+        bottom: 10px; /* or 0 if you want it flush with bottom */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    </style>
+    <script src="https://kit.fontawesome.com/c4b02f5eae.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button id="toggleBtn">
+            <i class="fa-solid fa-bars" style="color: black; top: 5%;"></i>
+            <span class="menu-text">Menu</span>
+        </button>
+
+        <ul class="menu">
+            <li data-tooltip="Home">
+                <a href="{% url 'home' %}">
+                    <i class="fa-solid fa-house" style="color: black;"></i>
+                    <span class="menu-text">Home</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Chat History">
+                <a href="{% url 'history' %}">
+                    <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
+                    <span class="menu-text">History</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Help">
+                <a href="{% url 'login' %}">
+                    <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
+                    <span class="menu-text">Help</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Language">
+                <a href="{% url 'language' %}">
+                    <i class="fa-solid fa-language" style="color: black;"></i>                    
+                    <span class="menu-text">Language</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Logout">
+                <a href="{% url 'logout' %}">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
+                    <span class="menu-text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="language-page">
+    <h2>Languages</h2>
+    <div class="language-list">
+        <ul class="language-column">
+            <li><a href="#">Arabic (ar)</a></li>
+            <li><a href="#">Bengali (bn)</a></li>
+            <li><a href="#">Chinese-Simplified (zh)</a></li>
+            <li><a href="#">Croatian (hr)</a></li>
+            <li><a href="#">Czech (cs)</a></li>
+            <li><a href="#">Danish (da)</a></li>
+            <li><a href="#">Dutch (nl)</a></li>
+            <li><a href="#">Filipino (fil)</a></li>
+            <li><a href="#">Finnish (fi)</a></li>
+            <li><a href="#">French (fr)</a></li>
+            <li><a href="#">German (de)</a></li>
+            <li><a href="#">Greek (el)</a></li>
+        </ul>
+        <ul class="language-column">
+            <li><a href="#">Hebrew (he)</a></li>
+            <li><a href="#">Hindi (hi)</a></li>
+            <li><a href="#">Hungarian (hu)</a></li>
+            <li><a href="#">Indonesian (id)</a></li>
+            <li><a href="#">Italian (it)</a></li>
+            <li><a href="#">Japanese (ja)</a></li>
+            <li><a href="#">Korean (ko)</a></li>
+            <li><a href="#">Maori (mi)</a></li>
+            <li><a href="#">Norwegian (no)</a></li>
+            <li><a href="#">Persian (fa)</a></li>
+            <li><a href="#">Polish (pl)</a></li>
+            <li><a href="#">Portuguese (pt)</a></li>
+        </ul>
+        <ul class="language-column">
+            <li><a href="#">Romanian (ro)</a></li>
+            <li><a href="#">Russian (ru)</a></li>
+            <li><a href="#">Spanish (es)</a></li>
+            <li><a href="#">Swahili (sw)</a></li>
+            <li><a href="#">Swedish (sv)</a></li>
+            <li><a href="#">Telugu (te)</a></li>
+            <li><a href="#">Thai (th)</a></li>
+            <li><a href="#">Turkish (tr)</a></li>
+            <li><a href="#">Ukrainian (uk)</a></li>
+            <li><a href="#">Vietnamese (vi)</a></li>
+            <li></li> <li></li> </ul>
+    </div>
+        <p class="language-note">These languages are options for prompts, not to change the web app language.</p>
+    </div>
+    
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+        });
+    </script>
+</body>
+</html>

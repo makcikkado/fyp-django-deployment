@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>PaliGemma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #EEFCA9, #B7E576);
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            /* height: 100%;
+            display: flex; */
+        }
+        /* .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            position: absolute;
+            left: calc(50%); /* Offsets for the sidebar
+            transform: translateX(-50%); 
+        } */
+        .container2 {
+            display: inline-flex;
+        }
+
+        /* .h2 {
+            text-align: left;
+            position: absolute;
+            top: 20%;
+            left: 40%;
+            transform: translate(-50%, -50%);
+            /* border-radius: 10px; 
+        } */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 50px;
+            height: 100vh;
+            background-color: #83CC61;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            overflow: visible;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar.expanded {
+            width: auto;
+            align-items: flex-start;
+            padding-left: 20px;
+            z-index: 10;
+        }
+
+        .menu-text {
+            display: none;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+
+        .sidebar.expanded .menu-text {
+            display: inline;
+        }
+
+        .sidebar #toggleBtn {
+            background: #83CC61;
+            border: none;
+            color: black;
+            font-size: 20px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .sidebar .menu {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .sidebar .menu li{
+            /* padding: 10px 20px; */
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            transition: padding 0.3s ease;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .sidebar .menu li::after {
+            content: attr(data-tooltip); /* The text will come from the data-tooltip attribute */
+            position: absolute;
+            /* left: 50px; Position the tooltip to the right of the icon */
+            left: calc(100% + 10px); /* dynamically position right of sidebar */
+            top: 50%;
+            transform: translateY(-50%);
+            background: #EEFCA9;
+            color: black;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            font-size: 14px;
+            z-index: 20;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3); /* This adds the shadow */
+        }
+
+        .sidebar:not(.expanded) .menu li:hover::after {
+            opacity: 1;
+        }
+
+        .sidebar .menu li:hover{
+            background: #EEFCA9;
+            opacity: 75%;
+            border-radius: 5px;
+        }
+
+        .sidebar .menu li a {
+            color: black;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar.expanded ~ .h1 {
+            margin-left: 200px;
+        }
+
+        .sidebar img {
+            width: 25px;
+            margin: 10px;
+        }
+
+        /* .main-content {
+            flex-grow: 1; /* Takes remaining space 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        } */
+        ::-webkit-input-placeholder {
+            color:373737;
+        }
+
+        ::-moz-placeholder {
+            color:373737;
+        }
+
+        ::-ms-placeholder {
+            color:373737;
+        }
+
+        ::placeholder {
+            color:373737;
+        }
+
+        .help-content {
+            max-width: 800px;
+            background-color: #faffd7;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            margin: auto;
+            text-align: left;
+        }
+
+        .help-content h2 {
+            color: #4A7300;
+            margin-bottom: 10px;
+        }
+
+        .help-content p, .help-content ul {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 20px;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 2em;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #4D7C0F;
+        }
+        ul {
+            list-style: disc;
+            margin-left: 2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #D4F8A5;
+        }
+        a {
+            color: #2D7A0D;
+        }
+        .faq dt {
+            font-weight: bold;
+            margin-top: 1em;
+        }
+        .faq dd {
+            margin-left: 1em;
+            margin-bottom: 1em;
+        }
+    </style>
+    <script src="https://kit.fontawesome.com/c4b02f5eae.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button id="toggleBtn">
+            <i class="fa-solid fa-bars" style="color: black; top: 5%;"></i>
+            <span class="menu-text">Menu</span>
+        </button>
+
+        <ul class="menu">
+            <li data-tooltip="Home">
+                <a href="{% url 'home' %}">
+                    <i class="fa-solid fa-house" style="color: black;"></i>
+                    <span class="menu-text">Home</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Chat History">
+                <a href="{% url 'history' %}">
+                    <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
+                    <span class="menu-text">History</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Help">
+                <a href="{% url 'login' %}">
+                    <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
+                    <span class="menu-text">Help</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Language">
+                <a href="{% url 'login' %}">
+                    <i class="fa-solid fa-language" style="color: black;"></i>                    
+                    <span class="menu-text">Language</span>
+                </a>
+            </li>
+
+            <li data-tooltip="Logout">
+                <a href="{% url 'logout' %}">
+                    <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
+                    <span class="menu-text">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="help-content">
+
+        <h2>Need Help Using PaliGemma?</h2>
+                <p>Follow the steps below to get started:</p>
+                    <ul>
+                        <li><strong>Step 1:</strong> Click "Upload an image" and select a file from your device.</li>
+                        <li><strong>Step 2:</strong> Enter a clear and specific prompt about the image.</li>
+                        <li><strong>Step 3:</strong> Click the paper plane button to submit. Your response will appear shortly.</li>
+                    </ul>
+                <p><strong>Tip:</strong> Use descriptive language for better results, e.g., "Describe the bird species in this photo."</p>
+                <p>For any issues or feedback, please contact the system administrator.</p>
+        <h2>Help & Support</h2>
+
+        <h3>Getting Started</h3>
+        <p>PaliGemma is a web app that lets you upload an image and receive intelligent responses using Google's PaliGemma visual-language model.</p>
+        <ol>
+            <li>Register or log in to your account.</li>
+            <li>Navigate to the Upload page.</li>
+            <li>Select and upload your image (JPEG/PNG).</li>
+            <li>Enter a prompt related to the image.</li>
+            <li>Submit and view the AI-generated response.</li>
+        </ol>
+
+        <h3>Supported Inputs</h3>
+        <ul>
+            <li><strong>Image types:</strong> JPEG, PNG</li>
+            <li><strong>Max size:</strong> 5MB</li>
+            <li><strong>Prompt tips:</strong> Be specific for better results</li>
+        </ul>
+
+        <h3>Features</h3>
+        <ul>
+            <li>Image upload and preview</li>
+            <li>Text prompt input box</li>
+            <li>AI response display</li>
+            <li>History page with past uploads</li>
+            <li>Secure user login system</li>
+        </ul>
+
+        <h3>Prompt Examples</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Image Type</th>
+                    <th>Example Prompt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Animal</td>
+                    <td>What species is this?</td>
+                </tr>
+                <tr>
+                    <td>Nature</td>
+                    <td>Describe this landscape in 3 sentences.</td>
+                </tr>
+                <!-- <tr>
+                    <td>Objects</td>
+                    <td>Identify the object and explain its function.</td>
+                </tr>
+                <tr>
+                    <td>Abstract</td>
+                    <td>Write a haiku based on this image.</td>
+                </tr> -->
+            </tbody>
+        </table>
+
+        <h3>Common Issues & Solutions</h3>
+        <ul>
+            <li><strong>Image not uploading?</strong> Make sure the file is in JPEG/PNG format and under the size limit.</li>
+            <li><strong>No response?</strong> Check your internet connection or try again after a few minutes.</li>
+            <li><strong>History page not working?</strong> Ensure you're logged in and session is active.</li>
+        </ul>
+
+        <h3>Account & Privacy</h3>
+        <ul>
+            <li>Your uploads are private and secure.</li>
+            <li>You can delete your history any time.</li>
+            <li>All data is stored in a secure cloud database.</li>
+        </ul>
+
+        <h3>Frequently Asked Questions (FAQ)</h3>
+        <dl class="faq">
+            <dt>Can I use this for wildlife research?</dt>
+            <dd>Yes, it helps identify species, but always verify with experts.</dd>
+
+            <dt>Does it work offline?</dt>
+            <dd>No, PaliGemma needs an internet connection.</dd>
+
+            <dt>Can I use it on my phone?</dt>
+            <dd>Yes, the app is mobile-friendly and works on most browsers.</dd>
+        </dl>
+
+        <h3>Contact & Feedback</h3>
+        <p>Have questions or suggestions? Contact us at <a href="mailto:support@paligemma.app">support@paligemma.app</a> or visit the Contact page.</p>
+
+        <h3>Technical Info</h3>
+        <ul>
+            <li><strong>Model:</strong> Google’s PaliGemma (via Hugging Face)</li>
+            <li><strong>Backend:</strong> Django + MySQL</li>
+            <li><strong>Hosting:</strong> Frontend on Render, DB on Clever Cloud</li>
+        </ul>
+    </div>
+
+
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const toggleBtn = document.getElementById('toggleBtn');
+
+        toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('expanded');
+        });
+    </script>
+
+</body>
+</html>
