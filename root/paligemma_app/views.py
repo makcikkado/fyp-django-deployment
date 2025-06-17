@@ -32,10 +32,6 @@ def mainView(request):
 
     return render (request, 'main.html')    
 
-@login_required(login_url='/login/') #user must be logged in before accessing homepage, can remove this later if not needed, if remove, check settings.py and remove LOGIN_URL variable.
-# def Home(request):
-#     return render(request, 'index.html')
-
 def RegisterView(request):
 
     if request.method == "POST":
@@ -81,7 +77,9 @@ def RegisterView(request):
             return redirect('login')
 
     return render(request, 'register.html')
-
+@login_required(login_url='/login/') #user must be logged in before accessing homepage, can remove this later if not needed, if remove, check settings.py and remove LOGIN_URL variable.
+# def Home(request):
+#     return render(request, 'index.html')
 def LoginView(request):
 
     if request.method == "POST":
