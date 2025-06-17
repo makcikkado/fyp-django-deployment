@@ -449,40 +449,24 @@
             </button>
 
             <ul class="menu">
-                <!-- <li>
-                    <a href="{% url 'history' %}">
-                        <i class="fa-solid fa-clock-rotate-left" style="color: black; top: 10%;"></i>
-                        <span class="menu-text">History</span>
+                <li data-tooltip="Home">
+                    <a href="{% url 'main' %}">
+                        <i class="fa-solid fa-house" style="color: black;"></i>
+                        <span class="menu-text">Home</span>
                     </a>
-                </li> -->
-
+                </li>
                 <li>
                     <a href="{% url 'login' %}">
                         <i class="fa-regular fa-question fa-lg" style="color: black;"></i>
                         <span class="menu-text">Help</span>
                     </a>
                 </li>
-
-                <!-- <li>
-                    <a href="{% url 'login' %}">
-                        <i class="fa-solid fa-location-dot fa-lg" style="color: black;"></i>
-                        <span class="menu-text">Location</span>
-                    </a>
-                </li> -->
-
                 <li>
                     <a href="{% url 'login' %}">
-                        <i class="fa-regular fa-globe fa-lg" style="color: black;"></i>
+                        <i class="fa-solid fa-language" style="color: black;"></i>
                         <span class="menu-text">Language</span>
                     </a>
                 </li>
-
-                <!-- <li>
-                    <a href="{% url 'logout' %}">
-                        <i class="fa-solid fa-arrow-right-from-bracket" style="color: black;"></i>
-                        <span class="menu-text">Logout</span>
-                    </a>
-                </li> -->
             </ul>
         </div>
 
