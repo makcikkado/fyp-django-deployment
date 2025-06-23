@@ -232,45 +232,45 @@ def ResponseView(request, pk=None):
             return redirect('home')
         
         # Get absolute path to the uploaded image
-        # image_path = os.path.join(settings.MEDIA_ROOT, str(prompt_obj.imagePrompt))
+        image_path = os.path.join(settings.MEDIA_ROOT, str(prompt_obj.imagePrompt))
 
-    #     # Run the image + prompt through PaliGemma via your inference script
-    #     ai_response = query_paligemma(image_path=image_path, user_prompt=prompt_obj.textPrompt)
+        # Run the image + prompt through PaliGemma via your inference script
+        ai_response = query_paligemma(image_path=image_path, user_prompt=prompt_obj.textPrompt)
 
-    #     # Save the AI response to the database
-    #     saved_response = Response.objects.create(
-    #         response=ai_response[:50],  # ensure it fits in CharField (max_length=50)
-    #         feedback=0,                 # default or placeholder until user gives feedback
-    #         prompt=prompt_obj
-    #     )
+        # Save the AI response to the database
+        saved_response = Response.objects.create(
+            response=ai_response[:50],  # ensure it fits in CharField (max_length=50)
+            feedback=0,                 # default or placeholder until user gives feedback
+            prompt=prompt_obj
+        )
 
-    #     # Optional: also save to History table
-    #     History.objects.create(
-    #         user=request.user,
-    #         prompt=prompt_obj,
-    #         response=saved_response
-    #     )
+        # Optional: also save to History table
+        History.objects.create(
+            user=request.user,
+            prompt=prompt_obj,
+            response=saved_response
+        )
 
-        # Update profile table
-        # profile = Profile.objects.get(user=request.user)
-        # profile.prompts.add(prompt_obj)
-        # profile.responses.add(saved_response)
-
-    #     context = {
-    #         'prompt': prompt_obj,
-    #         'ai_response': ai_response,
-    #         'response_obj': saved_response
-    #     }
-    #     return render(request, 'response.html', context)
-
-    # return render(request, 'home.html')
+        Update profile table
+        profile = Profile.objects.get(user=request.user)
+        profile.prompts.add(prompt_obj)
+        profile.responses.add(saved_response)
 
         context = {
-            'prompt': prompt_obj
+            'prompt': prompt_obj,
+            'ai_response': ai_response,
+            'response_obj': saved_response
         }
         return render(request, 'response.html', context)
-    prompt = get_object_or_404(Prompt, pk=pk)
-    return render(request, 'response.html', {'prompt': prompt})
+
+    return render(request, 'main.html')
+
+    #     context = {
+    #         'prompt': prompt_obj
+    #     }
+    #     return render(request, 'response.html', context)
+    # prompt = get_object_or_404(Prompt, pk=pk)
+    # return render(request, 'response.html', {'prompt': prompt})
 
         # apply the HF API       
         # fetch image from database
