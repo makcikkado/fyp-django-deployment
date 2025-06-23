@@ -32,6 +32,68 @@ def mainView(request):
 
     return render (request, 'main.html')    
 
+def ResponseView(request, pk=None):
+
+    if pk is not None:
+        try:
+            prompt_obj = Prompt.objects.get(pk=pk)
+        except Prompt.DoesNotExist:
+            messages.error(request, "Prompt not found.")
+            return redirect('home')
+        
+        # Get absolute path to the uploaded image
+        image_path = os.path.join(settings.MEDIA_ROOT, str(prompt_obj.imagePrompt))
+
+        # Run the image + prompt through PaliGemma via your inference script
+        ai_response = query_paligemma(image_path=image_path, user_prompt=prompt_obj.textPrompt)
+
+        # Save the AI response to the database
+        # saved_response = Response.objects.create(
+        #     response=ai_response[:50],  # ensure it fits in CharField (max_length=50)
+        #     feedback=0,                 # default or placeholder until user gives feedback
+        #     prompt=prompt_obj
+        # )
+
+        # Optional: also save to History table
+        # History.objects.create(
+        #     user=request.user,
+        #     prompt=prompt_obj,
+        #     response=saved_response
+        # )
+
+        # Update profile table
+        # profile = Profile.objects.get(user=request.user)
+        # profile.prompts.add(prompt_obj)
+        # profile.responses.add(saved_response)
+
+        context = {
+            'prompt': prompt_obj,
+            'ai_response': ai_response
+            # 'response_obj': saved_response
+        }
+        return render(request, 'response.html', context)
+
+    return render(request, 'main.html')
+
+    #     context = {
+    #         'prompt': prompt_obj
+    #     }
+    #     return render(request, 'response.html', context)
+    # prompt = get_object_or_404(Prompt, pk=pk)
+    # return render(request, 'response.html', {'prompt': prompt})
+
+        # apply the HF API       
+        # fetch image from database
+            # img = Prompt.objects.all()
+            # context = {'img': img}
+            # return render(request, 'response.html', context)
+        # prompt_obj = Prompt.objects.get(pk=pk)
+        # return render(request, 'response.html', {'prompt': prompt_obj})
+        # fetch prompt from database
+        # click 'new chat' then got popup 
+    
+    return render ('home') 
+
 @login_required(login_url='/login/') #user must be logged in before accessing homepage, can remove this later if not needed, if remove, check settings.py and remove LOGIN_URL variable.
 def Home(request):
     return render(request, 'index.html')
@@ -221,68 +283,6 @@ def HomePageView(request):
             return redirect ('home')
 
     return render (request, 'index.html')
-
-def ResponseView(request, pk=None):
-
-    if pk is not None:
-        try:
-            prompt_obj = Prompt.objects.get(pk=pk)
-        except Prompt.DoesNotExist:
-            messages.error(request, "Prompt not found.")
-            return redirect('home')
-        
-        # Get absolute path to the uploaded image
-        image_path = os.path.join(settings.MEDIA_ROOT, str(prompt_obj.imagePrompt))
-
-        # Run the image + prompt through PaliGemma via your inference script
-        ai_response = query_paligemma(image_path=image_path, user_prompt=prompt_obj.textPrompt)
-
-        # Save the AI response to the database
-        # saved_response = Response.objects.create(
-        #     response=ai_response[:50],  # ensure it fits in CharField (max_length=50)
-        #     feedback=0,                 # default or placeholder until user gives feedback
-        #     prompt=prompt_obj
-        # )
-
-        # Optional: also save to History table
-        # History.objects.create(
-        #     user=request.user,
-        #     prompt=prompt_obj,
-        #     response=saved_response
-        # )
-
-        # Update profile table
-        # profile = Profile.objects.get(user=request.user)
-        # profile.prompts.add(prompt_obj)
-        # profile.responses.add(saved_response)
-
-        context = {
-            'prompt': prompt_obj,
-            'ai_response': ai_response
-            # 'response_obj': saved_response
-        }
-        return render(request, 'response.html', context)
-
-    return render(request, 'main.html')
-
-    #     context = {
-    #         'prompt': prompt_obj
-    #     }
-    #     return render(request, 'response.html', context)
-    # prompt = get_object_or_404(Prompt, pk=pk)
-    # return render(request, 'response.html', {'prompt': prompt})
-
-        # apply the HF API       
-        # fetch image from database
-            # img = Prompt.objects.all()
-            # context = {'img': img}
-            # return render(request, 'response.html', context)
-        # prompt_obj = Prompt.objects.get(pk=pk)
-        # return render(request, 'response.html', {'prompt': prompt_obj})
-        # fetch prompt from database
-        # click 'new chat' then got popup 
-    
-    return render ('home') 
 
 def ResponseLoggedView(request, pk=None):
 
