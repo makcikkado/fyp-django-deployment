@@ -238,28 +238,28 @@ def ResponseView(request, pk=None):
         ai_response = query_paligemma(image_path=image_path, user_prompt=prompt_obj.textPrompt)
 
         # Save the AI response to the database
-        saved_response = Response.objects.create(
-            response=ai_response[:50],  # ensure it fits in CharField (max_length=50)
-            feedback=0,                 # default or placeholder until user gives feedback
-            prompt=prompt_obj
-        )
+        # saved_response = Response.objects.create(
+        #     response=ai_response[:50],  # ensure it fits in CharField (max_length=50)
+        #     feedback=0,                 # default or placeholder until user gives feedback
+        #     prompt=prompt_obj
+        # )
 
         # Optional: also save to History table
-        History.objects.create(
-            user=request.user,
-            prompt=prompt_obj,
-            response=saved_response
-        )
+        # History.objects.create(
+        #     user=request.user,
+        #     prompt=prompt_obj,
+        #     response=saved_response
+        # )
 
         # Update profile table
-        profile = Profile.objects.get(user=request.user)
-        profile.prompts.add(prompt_obj)
-        profile.responses.add(saved_response)
+        # profile = Profile.objects.get(user=request.user)
+        # profile.prompts.add(prompt_obj)
+        # profile.responses.add(saved_response)
 
         context = {
             'prompt': prompt_obj,
-            'ai_response': ai_response,
-            'response_obj': saved_response
+            'ai_response': ai_response
+            # 'response_obj': saved_response
         }
         return render(request, 'response.html', context)
 
