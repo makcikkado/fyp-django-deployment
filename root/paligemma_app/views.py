@@ -251,7 +251,7 @@ def ResponseView(request, pk=None):
             response=saved_response
         )
 
-        Update profile table
+        # Update profile table
         profile = Profile.objects.get(user=request.user)
         profile.prompts.add(prompt_obj)
         profile.responses.add(saved_response)
