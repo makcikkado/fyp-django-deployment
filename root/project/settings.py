@@ -143,7 +143,7 @@ EMAIL_USE_SSL=True
 EMAIL_HOST_USER="audrymayla88@gmail.com"
 EMAIL_HOST_PASSWORD="iqvt pxoz drna opvf"
 
-MEDIA_URL = 'paligemma/uploads/'
+MEDIA_URL = 'root/uploads/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 LOGIN_URL = '/login/'
