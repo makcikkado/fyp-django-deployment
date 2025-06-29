@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.db import models
 
 from django.shortcuts import render, redirect, get_object_or_404
