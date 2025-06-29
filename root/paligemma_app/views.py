@@ -76,7 +76,8 @@ def ResponseView(request, pk=None):
     return render(request, 'main.html')
    
     return render ('home') 
-
+    
+@csrf_exempt  # optional: for AJAX post; remove if CSRF token is passed
 @login_required(login_url='/login/') #user must be logged in before accessing homepage, can remove this later if not needed, if remove, check settings.py and remove LOGIN_URL variable.
 def Home(request):
     return render(request, 'index.html')
