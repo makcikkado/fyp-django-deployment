@@ -74,24 +74,7 @@ def ResponseView(request, pk=None):
         return render(request, 'response.html', context)
 
     return render(request, 'main.html')
-
-    #     context = {
-    #         'prompt': prompt_obj
-    #     }
-    #     return render(request, 'response.html', context)
-    # prompt = get_object_or_404(Prompt, pk=pk)
-    # return render(request, 'response.html', {'prompt': prompt})
-
-        # apply the HF API       
-        # fetch image from database
-            # img = Prompt.objects.all()
-            # context = {'img': img}
-            # return render(request, 'response.html', context)
-        # prompt_obj = Prompt.objects.get(pk=pk)
-        # return render(request, 'response.html', {'prompt': prompt_obj})
-        # fetch prompt from database
-        # click 'new chat' then got popup 
-    
+   
     return render ('home') 
 
 @login_required(login_url='/login/') #user must be logged in before accessing homepage, can remove this later if not needed, if remove, check settings.py and remove LOGIN_URL variable.
@@ -367,3 +350,79 @@ def LanguageView(request):
 
 def HelpView(request):
     return render(request, 'help-menu.html')
+
+def EditHistoryView(request, response_id):
+    old_response = get_object_or_404(Response, responseID=response_id, prompt__userID=request.user)
+
+    new_response = None
+
+    if request.method == "POST":
+        new_text = request.POST.get('new_text')
+        
+        if new_text:
+            # Step 1: Clone the prompt (reuse image, change prompt text)
+            new_prompt = Prompt.objects.create(
+                userID=request.user,
+                imagePrompt=old_response.prompt.imagePrompt,  # reuse the same image
+                textPrompt=new_text,
+                created_at=timezone.now()
+            )
+
+            # Step 2: Run the model inference
+            image_path = os.path.join(settings.MEDIA_ROOT, str(new_prompt.imagePrompt))
+            ai_response = query_paligemma(image_path=image_path, user_prompt=new_text)
+
+            # Step 3: Save new response
+            new_response = Response.objects.create(
+                response=ai_response[:50],
+                feedback=0,
+                prompt=new_prompt
+            )
+
+            # Step 4: Save to history
+            History.objects.create(
+                user=request.user,
+                prompt=new_prompt,
+                response=new_response
+            )
+
+            # Step 5: Link to user profile (optional)
+            profile = Profile.objects.get(user=request.user)
+            profile.prompt.add(new_prompt)
+            profile.response.add(new_response)
+
+            messages.success(request, "New prompt submitted and response regenerated.")
+            # return redirect('new-response', response_id=new_response.responseID)
+
+        if 'delete' in request.POST:
+            old_response.delete()
+            messages.success(request, "Response deleted.")
+            return redirect('history')
+
+    return render(request, 'edit_history.html', {'response': old_response, 'new_response': new_response})
+
+def NewResponseView(request, response_id):
+    response = get_object_or_404(Response, responseID=response_id, prompt__userID=request.user)
+
+    context = {
+        'response': response,
+        'prompt': response.prompt
+    }
+
+    return render(request, 'new_response.html', context)
+
+def SubmitFeedbackView(request):
+    if request.method == "POST":
+        response_id = request.POST.get("response_id")
+        feedback_value = request.POST.get("feedback")
+
+        try:
+            response = Response.objects.get(responseID=response_id, prompt__userID=request.user)
+            response.feedback = int(feedback_value)
+            response.save()
+            return JsonResponse({"status": "success"})
+        except Response.DoesNotExist:
+            return JsonResponse({"status": "error", "message": "Response not found."})
+
+    return JsonResponse({"status": "error", "message": "Invalid request."})
+
