@@ -380,10 +380,10 @@
     <script src="https://kit.fontawesome.com/c4b02f5eae.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="main-wrapper">
+<!--     <div class="main-wrapper">
         <h2 class="h1">Chat History</h2><br>
 
-        <!-- fetch all image from db -->
+        <!-- fetch all image from db 
          <img src="" alt="">
          {% if responses %}
             <div class="history-grid">
@@ -397,8 +397,44 @@
         {% else %}
             <p>No uploads yet.</p>
         {% endif %}
-    </div>
+    </div> -->
+    
+    <div class="main-wrapper">
+        <h2 class="h1">Chat History</h2><br>
 
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'history' %}" {% if not current_filter %}style="font-weight: bold;"{% endif %}>All</a> |
+            <a href="?feedback=1" {% if current_filter == '1' %}style="font-weight: bold;"{% endif %}>👍 Liked</a> |
+            <a href="?feedback=2" {% if current_filter == '2' %}style="font-weight: bold;"{% endif %}>👎 Disliked</a>
+        </div>
+
+
+        <!-- fetch all image from db -->
+         <img src="" alt="">
+         {% if responses %}
+            <div class="history-grid">
+                {% for response in responses %}
+                    <div class="prompt-text">
+                        <!-- {{ response.response }} <br> -->
+                        {% if response.feedback == 1 %}
+                            <!-- <span>👍</span> -->
+                        {% elif response.feedback == 2 %}
+                            <!-- <span>👎</span> -->
+                        {% endif %}
+                    </div>
+
+                    <div class="history-item">
+                        <a href="{% url 'edit-history' response.responseID %}">
+                            <img data-tooltip="Click to view more" src="{{ response.prompt.imagePrompt.url }}" alt="Prompt Image" width="200"><br>
+                        </a>
+                        <!-- <div class="prompt-text">{{ response.response }}</div> -->
+                    </div>                     
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No uploads yet.</p>
+        {% endif %}
+    </div>
 
     <!-- sidebar -->
     <div class="sidebar" id="sidebar">
