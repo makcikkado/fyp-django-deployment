@@ -39,7 +39,7 @@ urlpatterns = [
     path('history/edit/<int:response_id>/', views.EditHistoryView, name='edit-history'),
     path('new-response/<int:response_id>/', views.NewResponseView, name='new-response'),
     path('language/', views.LanguageView, name='languages'),
-    path('help/', views.HelpView, name='help-menu')
+    path('help/', views.HelpView, name='help-menu'),
     path('submit-feedback/', views.SubmitFeedbackView, name='submit-feedback')
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
