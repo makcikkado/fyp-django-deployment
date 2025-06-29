@@ -36,6 +36,8 @@ urlpatterns = [
     path('response/<int:pk>/', views.ResponseView, name='response'),
     path('response_logged/<int:pk>/', views.ResponseLoggedView, name='response-logged'),
     path('history/', views.HistoryView, name='history'),
+    path('history/edit/<int:response_id>/', views.EditHistoryView, name='edit-history'),
+    path('new-response/<int:response_id>/', views.NewResponseView, name='new-response'),
     path('language/', views.LanguageView, name='languages'),
     path('help/', views.HelpView, name='help-menu')
 ]
