@@ -27,7 +27,7 @@ class Prompt(models.Model):
     promptID = models.AutoField(primary_key=True)
     imagePrompt = models.ImageField(upload_to = 'uploads/')               
     textPrompt = models.CharField(max_length=255, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return f'Prompt {self.promptID}'
