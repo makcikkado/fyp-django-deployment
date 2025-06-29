@@ -335,15 +335,28 @@ def HistoryView(request):
     # context = {
     #     'response': responses
     # }
+    feedback_filter = request.GET.get('feedback')  # '1', '2', or None
 
     profile = Profile.objects.get(user=request.user)
     responses = profile.response.all().select_related('prompt')  # Efficiently fetch linked prompt
 
+    if feedback_filter in ['1', '2']:
+        responses = responses.filter(feedback=int(feedback_filter))
+
     context = {
         'profile': profile,
-        'responses': responses
+        'responses': responses,
+        'current_filter': feedback_filter
     }
     return render(request, 'history.html', context)
+    # profile = Profile.objects.get(user=request.user)
+    # responses = profile.response.all().select_related('prompt')  # Efficiently fetch linked prompt
+
+    # context = {
+    #     'profile': profile,
+    #     'responses': responses
+    # }
+    # return render(request, 'history.html', context)
 
 def LanguageView(request):
     return render(request, 'language.html')
